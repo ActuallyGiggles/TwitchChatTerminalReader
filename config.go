@@ -12,8 +12,8 @@ import (
 )
 
 var config T
+var configFolderLocation string
 var configFileLocation string
-var appdata string
 
 type T struct {
 	Username          string
@@ -27,7 +27,8 @@ func getCredentials() {
 		panic(err)
 	}
 
-	configFileLocation = appdata + "/TwitchChatTerminalReader/config.yaml"
+	configFolderLocation = appdata + "/TwitchChatTerminalReader/"
+	configFileLocation = configFolderLocation + "config.yaml"
 
 	readCredentials()
 }
@@ -44,12 +45,17 @@ func readCredentials() {
 		obtainCredentials()
 		return
 	}
+
+	if config.Username == "" {
+		obtainCredentials()
+		return
+	}
 }
 
 func updateCredentials(lastMonitoredRoom string) {
-	_, err := os.Stat(appdata + "/TwitchChatTerminalReader/")
+	_, err := os.Stat(configFolderLocation)
 	if os.IsNotExist(err) {
-		os.Mkdir(appdata+"/TwitchChatTerminalReader/", 0755)
+		os.Mkdir(configFolderLocation, 0755)
 	}
 
 	config.LastMonitoredRoom = lastMonitoredRoom
@@ -60,7 +66,6 @@ func updateCredentials(lastMonitoredRoom string) {
 	}
 
 	err = os.WriteFile(configFileLocation, data, 0644)
-
 	if err != nil {
 		panic(err)
 	}

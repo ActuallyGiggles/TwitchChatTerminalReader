@@ -12,6 +12,7 @@ import (
 	"github.com/charmbracelet/bubbles/viewport"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"github.com/muesli/reflow/wordwrap"
 	"golang.org/x/term"
 )
 
@@ -96,9 +97,14 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		w, h, _ := term.GetSize(int(os.Stdout.Fd()))
 
 		if !m.initDone {
-			m.viewport = viewport.Model{}
 			m.viewport = viewport.New(w, h-4)
-			m.viewport.SetContent(strings.Join(m.messages, "\n"))
+			var messagesFixed []string
+			for _, message := range m.messages {
+				messagesFixed = append(messagesFixed, wordwrap.String(message, m.width))
+			}
+
+			m.viewport.SetContent(strings.Join(messagesFixed, "\n"))
+
 			m.textarea.SetWidth(w)
 
 			m.width = w
@@ -107,15 +113,23 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 
 		if m.width != w || m.height != h {
-			m.viewport = viewport.Model{}
 			m.viewport = viewport.New(w, h-4)
-			m.viewport.SetContent(strings.Join(m.messages, "\n"))
+			var messagesFixed []string
+			for _, message := range m.messages {
+				messagesFixed = append(messagesFixed, wordwrap.String(message, m.width))
+			}
+
+			m.viewport.SetContent(strings.Join(messagesFixed, "\n"))
+
 			m.textarea.SetWidth(w)
+
 			m.textarea.Reset()
 			m.viewport.GotoBottom()
 
 			m.width = w
 			m.height = h
+
+			tea.ClearScreen()
 		}
 
 	case tea.KeyMsg:
@@ -166,7 +180,18 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 			}
 
 			m.messages = append(m.messages, badge+" "+style.Render(msg.User)+": "+msg.Message)
-			m.viewport.SetContent(strings.Join(m.messages, "\n"))
+
+			if len(m.messages) > 100 {
+				m.messages = m.messages[len(m.messages)-100:]
+			}
+
+			var messagesFixed []string
+			for _, message := range m.messages {
+				messagesFixed = append(messagesFixed, wordwrap.String(message, m.width))
+			}
+
+			m.viewport.SetContent(strings.Join(messagesFixed, "\n"))
+			m.viewport.GotoBottom()
 		}
 	}
 
