@@ -91,7 +91,7 @@ func obtainCredentials() {
 	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#f25e92")).Render("Obtaining your OAuth is necessary to connect to Twitch chatrooms as yourself."))
 	fmt.Println()
 	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#e055a8")).Render("Instructions:"))
-	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#c850ba")).Render("1. https://twitchapps.com/tokengen/"))
+	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#c850ba")).Render("1. https://twitchapps.com/tmi/"))
 	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#be38d5")).Render(`2. Click "Connect"`))
 	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#9f2eec")).Render("3. Authenticate"))
 	fmt.Println(lipgloss.NewStyle().Foreground(lipgloss.Color("#FAFAFA")).Background(lipgloss.Color("#7e56f4")).Render("4. Paste the entire line starting with 'oauth' here:"))
